@@ -89,8 +89,10 @@ def get_input_args_for_training():
   parser.add_argument('--checkpoint', default=None)
 
   parser.add_argument('--learning_rate', default='0.003')
+  parser.add_argument('--dropout', default='0.02')
   parser.add_argument('--n_hidden_layers', default=1)
   parser.add_argument('--epochs', default='1')
+
 
   parser.add_argument('--save_location', default='checkpoint/')
   parser.add_argument('--images_path', type=str, default='flowers/')
