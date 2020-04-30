@@ -1,8 +1,8 @@
 from torchvision import models
 from torch import nn
 
-def build_universal_model(model_name, layers, layer_target_name = 'classifier', dropout=0.2, initial_epoch = 0):
-    model = getattr(models, model_name)(pretrained=True)
+def build_universal_model(model_name, layers, layer_target_name = 'classifier', dropout=0.2, initial_epoch = 0, pretrained=True):
+    model = getattr(models, model_name)(pretrained=pretrained)
 
     for param in model.parameters():
         param.requires_grad = False
