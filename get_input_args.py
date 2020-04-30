@@ -126,7 +126,7 @@ def get_input_args_for_predict():
   # you created with this function
   parser = argparse.ArgumentParser(description='Help')
 
-  parser.add_argument('--arch', default='vgg')
+  parser.add_argument('--arch', default='resnet101')
   parser.add_argument('--device', default='cpu')
   parser.add_argument('--checkpoint', default=None)
 
