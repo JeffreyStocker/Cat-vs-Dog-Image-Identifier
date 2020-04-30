@@ -7,7 +7,8 @@ from pathlib import Path
 from get_input_args import get_input_args_for_training as get_input_args
 import Timer
 import model_train
-import model_import from model_import
+from model_import import load_universal_model as load_checkpoint
+from model_build import build_universal_model as build_model
 
 '''
     Training a network 	      train.py successfully trains a new network on a dataset of images
@@ -39,7 +40,71 @@ Commandline arguments
 arguments = get_input_args().parse_args()
 print(arguments)
 
+model_output_name_and_input_count = {
+    "alexnet": ('classifier', 9216),
+
+    "vgg11": ('classifier', 25088),
+    "vgg13": ('classifier', 25088),
+
+    "vgg11_bn": ('classifier', 25088),
+    "vgg13_bn": ('classifier', 25088),
+    "vgg16": ('classifier', 25088),
+    "vgg16_bn": ('classifier', 25088),
+    "vgg19_bn": ('classifier', 25088),
+
+    "resnet50": ('fc', 2048),
+    "resnet101": ('fc', 2048),
+    "resnet152": ('fc', 2048),
+
+    "squeezenet1_0": ('classifier', 512),
+    "squeezenet1_1": ('classifier', 512),
+
+    "densenet121": ('classifier', 1024),
+    "densenet169": ('classifier', 1664),
+    "densenet161": ('classifier', 2208),
+    "densenet201": ('classifier', 1920),
+
+    "shufflenet_v2_x0_5": ('fc', 1024),
+    "shufflenet_v2_x1_0": ('fc', 1024),
+    "shufflenet_v2_x1_5": ('fc', 1024),
+    "shufflenet_v2_x2_0": ('fc', 2048),
+
+    "mobilenet_v2": ('classifier', 1280),
+  }
+
+def get_model_info(model_name):
+  try:
+    layer_name, n_inputs = model_output_name_and_input_count[model_name.lower()]
+  except:
+    errortext = f"Model name should be one of these {f'Model name should be one of these {}'.keys()}"
+    raise errortext
+
+  return layer_name, n_inputs
+
+
+layers_output_n = 0 #TODO
+
+
+
 if arguments['checkpoint']:
+  model, save_data, idx_to_classes = load_checkpoint(arguments['checkpoint'], dropout=arguments['dropout'])
+else:
+  model_name = arguments['model_name']
+  percent_dropouts = arguments['dropouts']
+  n_hidden_layers = arguments['n_hidden_layers']
+
+  layer_name, n_inputs = get_model_info(model_name)
+
+  layers = [int(n_inputs)]
+
+  for n in n_hidden_layers:
+    layers.append(int(n))
+  else:
+    layers.append(layers_output_n)
+
+  model, save_data = build_model(model_name, layers, layer_name, dropout=percent_dropouts, pretrained=True)
+
+
 
 
 start_time = Timer.Timer('Start Training')
