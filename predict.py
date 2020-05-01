@@ -1,34 +1,77 @@
 '''
-    Training a network 	      train.py successfully trains a new network on a dataset of images
-    Training validation log 	The training loss, validation loss, and validation accuracy are printed out as a network trains
-    Model architecture 	      The training script allows users to choose from at least two different architectures available from torchvision.models
-    Model hyperparameters 	  The training script allows users to set hyperparameters for learning rate, number of hidden units, and training epochs
-    Training with GPU 	      The training script allows users to choose training the model on a GPU
     Predicting classes 	      The predict.py script successfully reads in an image and a checkpoint then prints the most likely image class and it's associated probability
     Top K classes 	          The predict.py script allows users to print out the top K classes along with associated probabilities
     Displaying class names 	  The predict.py script allows users to load a JSON file that maps the class values to other category names
     Predicting with GPU 	    The predict.py script allows users to use the GPU to calculate the predictions
  '''
 import torch
+import model_validate
+import model_import
+import transforms
+
 from PIL import Image
+import json
 
 from torch import nn, optim
 from torch.utils.data import DataLoader
 import datetime
 from pathlib import Path
 
-from get_input_args import get_input_args
+from get_input_args import get_input_args_for_predict
 
 
 start_time = datetime.datetime.now()
 
 is_cuda_available = torch.cuda.is_available
-device = "cuda" if is_cuda_available() else 'cpu'
 
-'''
-Commandline arguments
-  arch = pick architecture structure
-  device = cpu or gpu
-  checkpoint = path to checkpoint
- '''
-arguments = get_input_args().parse_args()
+arguments = get_input_args_for_predict().parse_args()
+
+checkpoint = arguments.checkpoint
+image_path = arguments.image_path
+class_values = arguments.class_values
+topk = arguments.topk
+
+#check if device is available
+device = arguments.device
+if device != 'cuda' and device != 'cpu':
+  raise 'device argument must be either "cpu" or "cuda"'
+elif device =='cuda' and not is_cuda_available():
+  raise 'There is no CUDA on this computer'
+
+if class_values:
+  with open(class_values, 'r') as f:
+      class_to_names = json.load(f)
+else:
+  class_to_names = None
+
+model, save_data, idx_to_class = model_import.load_universal_model(checkpoint)
+
+
+#evaluate image with no gradients o& model in eval
+model.eval()
+with torch.no_grad():
+  model.to(device)
+  pil_image = Image.open(image_path)
+  tensor_image = transforms.data_transforms(pil_image)
+  tensor_image.unsqueeze_(0)
+  log_prob = model(tensor_image)
+
+prob_topk = torch.exp(log_prob).topk(topk)
+
+# print(prob_topk.items())
+output = []
+
+for prob, idx in zip(prob_topk[0][0].numpy(), prob_topk[1][0].numpy()):
+  class_idx = idx_to_class.get(str(idx))
+  ind_prob_info = [prob, idx, class_idx]
+
+  if class_to_names:
+    name = class_to_names.get(str(class_idx))
+    ind_prob_info.append(name)
+
+  output.append(ind_prob_info)
+
+
+#print names
+for names_probs in output:
+  print(names_probs[-1], names_probs[0])
