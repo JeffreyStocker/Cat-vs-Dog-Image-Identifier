@@ -126,17 +126,12 @@ def get_input_args_for_predict():
   # you created with this function
   parser = argparse.ArgumentParser(description='Help')
 
-  parser.add_argument('--arch', default='resnet101')
   parser.add_argument('--device', default='cpu')
-  parser.add_argument('--checkpoint', default=None)
+  parser.add_argument('--checkpoint')
 
-  parser.add_argument('--learning_rate', default='0.003')
-  parser.add_argument('--n_hidden_layers', default=1)
-  parser.add_argument('--epochs', default='1')
-
-  parser.add_argument('--save_location', default='checkpoint/')
-  parser.add_argument('--images_path', type=str, default='flowers/')
-  parser.add_argument('--idx_to_names', default='cat_to_name.json')
+  parser.add_argument('--image_path', type=str)
+  parser.add_argument('--class_values', default='cat_to_name.json')
+  parser.add_argument('--topk', default=5, type=int)
 
   return parser
 
