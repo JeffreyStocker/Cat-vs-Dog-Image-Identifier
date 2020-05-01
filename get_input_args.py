@@ -130,8 +130,8 @@ def get_input_args_for_predict():
   parser.add_argument('--checkpoint')
 
   parser.add_argument('--image_path', type=str)
-  parser.add_argument('--class_values', default='cat_to_name.json')
-  parser.add_argument('--topk', default=5, type=int)
+  parser.add_argument('--class_values', default=None)
+  parser.add_argument('--topk', default=1, type=int)
 
   return parser
 
