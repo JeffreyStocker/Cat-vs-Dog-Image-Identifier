@@ -93,7 +93,6 @@ save_location = arguments.save_location
 images_path = arguments.images_path
 idx_to_names = arguments.idx_to_names
 
-layers_output_n = 102 #TODO
 
 #check if device is available
 device = arguments.device
@@ -101,23 +100,6 @@ if device != 'cuda' and device != 'cpu':
   raise 'device argument must be either "cpu" or "cuda"'
 elif device =='cuda' and not torch.cuda.is_available():
   raise 'There is no CUDA on this computer'
-
-
-checkpoint = arguments.checkpoint
-if checkpoint:
-  model, save_data, idx_to_classes = load_checkpoint(checkpoint, dropout=dropout_percent)
-  model_name = save_data['model_name']
-else:
-  model_name = arguments.arch
-  n_hidden_layers = arguments.n_hidden_layers
-
-  layers = [int(n_inputs)]
-  layers.extend([int(layer.strip()) for layer in n_hidden_layers.split(',')])
-  layers.append(int(layers_output_n))
-
-  model, save_data = build_model(model_name, layers, layer_name, dropout=dropout_percent, pretrained=True)
-
-layer_name, n_inputs = get_model_info(model_name)
 
 #load images
 imagesFolder = ImageFolder(images_path, transform=transforms.data_transforms)
@@ -129,8 +111,32 @@ train_images_folder, test_images_folder= torch.utils.data.random_split(imagesFol
 train_images_dataloader = DataLoader(train_images_folder, batch_size=32)
 test_images_dataloader = DataLoader(test_images_folder, batch_size=32)
 
+
 class_to_idx = imagesFolder.class_to_idx
 print(class_to_idx)
+layers_output_n = len(class_to_idx) #TODO
+print(len(class_to_idx))
+
+checkpoint = arguments.checkpoint
+if checkpoint:
+  model, save_data, idx_to_classes = load_checkpoint(checkpoint, dropout=dropout_percent)
+  model_name = save_data['model_name']
+  layer_name, n_inputs = get_model_info(model_name)
+
+else:
+  model_name = arguments.arch
+  layer_name, n_inputs = get_model_info(model_name)
+
+  n_hidden_layers = arguments.n_hidden_layers
+
+  layers = [int(n_inputs)]
+  layers.extend([int(layer.strip()) for layer in n_hidden_layers.split(',')])
+  layers.append(int(layers_output_n))
+
+  model, save_data = build_model(model_name, layers, layer_name, dropout=dropout_percent, pretrained=True)
+
+
+
 
 if not save_data.get('idx_to_class'):
   save_data["idx_to_class"] = convert_class_to_idx(class_to_idx)
