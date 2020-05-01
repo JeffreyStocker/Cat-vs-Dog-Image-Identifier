@@ -27,8 +27,6 @@ from pathlib import Path
 ImageFolder = datasets.ImageFolder
 
 is_cuda_available = torch.cuda.is_available
-device = "cuda" if is_cuda_available() else 'cpu'
-
 
 '''
 Commandline arguments
@@ -86,30 +84,39 @@ def get_model_info(model_name):
   return layer_name, n_inputs
 
 
-checkpoint = arguments['checkpoint']
-dropout_percent = arguments['dropout']
-model_name = arguments['arch']
-n_hidden_layers = arguments['n_hidden_layers']
-learning_rate = arguments['learning_rate']
+dropout_percent = arguments.dropout
+learning_rate = arguments.learning_rate
+
+epochs = arguments.epochs
+save_location = arguments.save_location
+images_path = arguments.images_path
+idx_to_names = arguments.idx_to_names
+
+layers_output_n = 102 #TODO
+
+#check if device is available
+device = arguments.device
+if device != 'cuda' and device != 'cpu':
+  raise 'device argument must be either "cpu" or "cuda"'
+elif device =='cuda' and not torch.cuda.is_available():
+  raise 'There is no CUDA on this computer'
 
 
-epochs = arguments['epochs']
-save_location = arguments['save_location']
-images_path = arguments['images_path']
-idx_to_names = arguments['idx_to_names']
-
-layers_output_n = 0 #TODO
-layer_name, n_inputs = get_model_info(model_name)
-
-
+checkpoint = arguments.checkpoint
 if checkpoint:
   model, save_data, idx_to_classes = load_checkpoint(checkpoint, dropout=dropout_percent)
+  model_name = save_data['model_name']
 else:
+  model_name = arguments.arch
+  n_hidden_layers = arguments.n_hidden_layers
+
   layers = [int(n_inputs)]
   layers.extend([int(layer.strip()) for layer in n_hidden_layers.split(',')])
   layers.append(int(layers_output_n))
 
   model, save_data = build_model(model_name, layers, layer_name, dropout=dropout_percent, pretrained=True)
+
+layer_name, n_inputs = get_model_info(model_name)
 
 data_transforms = transforms.Compose([
                                     transforms.Resize(256),
@@ -128,7 +135,8 @@ train_images_folder, test_images_folder= torch.utils.data.random_split(imagesFol
 train_images_dataloader = DataLoader(train_images_folder, batch_size=32)
 test_images_dataloader = DataLoader(test_images_folder, batch_size=32)
 
-class_to_idx = train_images_dataloader.class_to_idx
+class_to_idx = imagesFolder.class_to_idx
+print(class_to_idx)
 
 if not save_data.get('idx_to_class'):
   save_data["idx_to_class"] = convert_class_to_idx(class_to_idx)
@@ -138,6 +146,6 @@ if not save_data.get('idx_to_class'):
 start_time = Timer.Timer('Start Training')
 
 criterion = nn.NLLLoss()
-optimizer = optim.Adam(model[layer_name].parameters(), learning_rate)
+optimizer = optim.Adam(getattr(model, layer_name).parameters(), learning_rate)
 
-train_model(model, criterion, optimizer, train_images_dataloader, test_images_dataloader, save_data=save_data)
+train_model(model, criterion, optimizer, train_images_dataloader, test_images_dataloader, save_data=save_data, epochs=epochs, device=device)
