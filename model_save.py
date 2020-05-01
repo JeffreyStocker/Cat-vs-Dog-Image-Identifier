@@ -2,8 +2,9 @@ import torch
 import os
 import datetime
 
+time = datetime.datetime.now()
+
 def save_universal_model(model, save_data, epochs = None, extra_text=None, include_epoch_in_title=None):
-    time = datetime.datetime.now()
     checkpoint = save_data
     checkpoint["state_dict"] = model.state_dict()
 
