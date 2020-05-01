@@ -5,6 +5,21 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "predict",
+      "type": "python",
+      "request": "launch",
+      // "program": "${workspaceFolder}\\predict.py --checkpoint checkpoint/densenet121_checkpoints_2020-04-30 10-44-07.027571-e173.pth --image_path flowers/test/2/image_05100.jpg",
+      "program": "${workspaceFolder}\\predict.py ",
+      "args": [
+        "--checkpoint", "checkpoint/densenet121_checkpoints_2020-04-30 10-44-07.027571-e173.pth",
+        "--image_path", "flowers/test/2/image_05100.jpg",
+        "--class_values", "cat_to_name.json",
+        "--device", "cpu",
+        // "--topk", "2"
+      ],
+      "console": "integratedTerminal"
+    },
+    {
       "name": "Python: Current File",
       "type": "python",
       "request": "launch",
