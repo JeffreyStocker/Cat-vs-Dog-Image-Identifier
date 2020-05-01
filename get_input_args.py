@@ -88,15 +88,16 @@ def get_input_args_for_training():
   parser.add_argument('--device', default='cpu', type=str, choices=['cpu', 'cuda'])
   parser.add_argument('--checkpoint', default=None)
 
-  parser.add_argument('--learning_rate', default=0.003, type=int, help="Should be a string with each layer sharing before and after, IE 3 layers would have '5, 3, 2, 6'") #
-  parser.add_argument('--dropout', default=0.02, type=int)
+  parser.add_argument('--learning_rate', default=0.003, help="Should be a string with each layer sharing before and after, IE 3 layers would have '5, 3, 2, 6'") #
+  parser.add_argument('--dropout', default=0.02)
   parser.add_argument('--n_hidden_layers', type=str, default='1, 2, 3')
-  parser.add_argument('--epochs', default=1, type=int)
+  parser.add_argument('--epochs', default=1)
 
   parser.add_argument('--save_location', type=str, default='checkpoint/')
   parser.add_argument('--images_path', type=str, default='flowers/train')
 
   return parser
+
 
 def get_input_args_for_predict():
   """

@@ -27,21 +27,7 @@ from pathlib import Path
 
 ImageFolder = datasets.ImageFolder
 
-is_cuda_available = torch.cuda.is_available
-
-'''
-Commandline arguments
-  arch = pick architecture structure
-  device = cpu or gpu
-  checkpoint = path to checkpoint
-  learing_rate = set learining rate
-  number of hidden unites =
-  epochs = number of epochs to train with
-  save_location = location to save training data
-  image_path = path to images
- '''
 arguments = get_input_args().parse_args()
-print(arguments)
 
 model_output_name_and_input_count = {
     "alexnet": ('classifier', 9216),
@@ -85,16 +71,18 @@ def get_model_info(model_name):
   return layer_name, n_inputs
 
 
-dropout_percent = arguments.dropout
-learning_rate = arguments.learning_rate
+dropout_percent = float(arguments.dropout)
+learning_rate = float(arguments.learning_rate)
 
-epochs = arguments.epochs
+epochs = int(arguments.epochs)
 save_location = arguments.save_location
 images_path = arguments.images_path
 
 
 #check if device is available
 device = arguments.device
+is_cuda_available = torch.cuda.is_available
+
 if device != 'cuda' and device != 'cpu':
   raise 'device argument must be either "cpu" or "cuda"'
 elif device =='cuda' and not torch.cuda.is_available():
@@ -133,8 +121,6 @@ else:
   layers.append(int(layers_output_n))
 
   model, save_data = build_model(model_name, layers, layer_name, dropout=dropout_percent, pretrained=True)
-
-
 
 
 if not save_data.get('idx_to_class'):
