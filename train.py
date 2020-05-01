@@ -91,7 +91,6 @@ learning_rate = arguments.learning_rate
 epochs = arguments.epochs
 save_location = arguments.save_location
 images_path = arguments.images_path
-idx_to_names = arguments.idx_to_names
 
 
 #check if device is available

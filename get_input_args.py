@@ -93,10 +93,8 @@ def get_input_args_for_training():
   parser.add_argument('--n_hidden_layers', type=str, default='1, 2, 3')
   parser.add_argument('--epochs', default=1, type=int)
 
-
   parser.add_argument('--save_location', type=str, default='checkpoint/')
   parser.add_argument('--images_path', type=str, default='flowers/')
-  parser.add_argument('--idx_to_names', type=str, default='cat_to_name.json')
 
   return parser
 
