@@ -6,8 +6,9 @@ from model_import import load_universal_model as load_checkpoint
 from model_build import build_universal_model as build_model
 from model_train import train as train_model
 from torch.utils.data import DataLoader
-from torchvision import datasets, transforms
+from torchvision import datasets
 from convert_class_to_idx import convert_class_to_idx
+import transforms
 
 #not using yet
 from PIL import Image
@@ -118,15 +119,8 @@ else:
 
 layer_name, n_inputs = get_model_info(model_name)
 
-data_transforms = transforms.Compose([
-                                    transforms.Resize(256),
-                                    transforms.CenterCrop(224),
-                                    transforms.ToTensor(),
-                                    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-                                    ])
-
 #load images
-imagesFolder = ImageFolder(images_path, data_transforms)
+imagesFolder = ImageFolder(images_path, transform=transforms.data_transforms)
 n_images = len(imagesFolder)
 n_train_images = n_images//10
 n_test_images = n_images - n_train_images
