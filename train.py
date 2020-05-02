@@ -53,11 +53,6 @@ model_output_name_and_input_count = {
     "densenet161": ('classifier', 2208),
     "densenet201": ('classifier', 1920),
 
-    "shufflenet_v2_x0_5": ('fc', 1024),
-    "shufflenet_v2_x1_0": ('fc', 1024),
-    "shufflenet_v2_x1_5": ('fc', 1024),
-    "shufflenet_v2_x2_0": ('fc', 2048),
-
     "mobilenet_v2": ('classifier', 1280),
   }
 
@@ -75,7 +70,6 @@ dropout_percent = float(arguments.dropout)
 learning_rate = float(arguments.learning_rate)
 
 epochs = int(arguments.epochs)
-save_location = arguments.save_location
 images_path = arguments.images_path
 
 
@@ -98,11 +92,8 @@ train_images_folder, test_images_folder= torch.utils.data.random_split(imagesFol
 train_images_dataloader = DataLoader(train_images_folder, batch_size=32)
 test_images_dataloader = DataLoader(test_images_folder, batch_size=32)
 
-
 class_to_idx = imagesFolder.class_to_idx
-print(class_to_idx)
 layers_output_n = len(class_to_idx) #TODO
-print(len(class_to_idx))
 
 checkpoint = arguments.checkpoint
 if checkpoint:
@@ -128,9 +119,11 @@ if not save_data.get('idx_to_class'):
 
 
 #train model
-start_time = Timer.Timer('Start Training')
+timer = Timer.Timer('Start Training')
 
 criterion = nn.NLLLoss()
 optimizer = optim.Adam(getattr(model, layer_name).parameters(), learning_rate)
 
 train_model(model, criterion, optimizer, train_images_dataloader, test_images_dataloader, save_data=save_data, epochs=epochs, device=device)
+timer.stop('end time')
+
