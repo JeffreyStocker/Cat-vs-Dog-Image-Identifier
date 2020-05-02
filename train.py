@@ -88,8 +88,8 @@ images_test_path = arguments.images_test_path
 imagesFolder = ImageFolder(images_path, transform=transforms.data_transforms)
 if not images_test_path:
   n_images = len(imagesFolder)
-  n_train_images = n_images//10
-  n_test_images = n_images - n_train_images
+  n_test_images  = n_images//10
+  n_train_images = n_images - n_test_images
   train_images_folder, test_images_folder= torch.utils.data.random_split(imagesFolder, [n_train_images, n_test_images])
 
   pass
