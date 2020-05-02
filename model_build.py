@@ -31,7 +31,6 @@ def build_universal_model(model_name, layers, layer_target_name = 'classifier', 
         'dropout': dropout,
         'epochs': initial_epoch
     }
-
     setattr(model, layer_target_name, classifier)
 
     return model, save_data

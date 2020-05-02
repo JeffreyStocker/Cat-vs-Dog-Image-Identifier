@@ -85,7 +85,6 @@ elif device =='cuda' and not torch.cuda.is_available():
 images_path = arguments.images_path
 images_test_path = arguments.images_test_path
 
-
 if not images_test_path:
   print("Warning: No test dataset was supplied. The testing set will have the same transforms as the training dataset")
   imagesFolder = ImageFolder(images_path, transform=transforms.data_transforms_train)
@@ -104,13 +103,12 @@ else:
 train_images_dataloader = DataLoader(train_images_folder, batch_size=32, shuffle=True)
 test_images_dataloader = DataLoader(test_images_folder, batch_size=32)
 
-
+#load checkpoint
 checkpoint = arguments.checkpoint
 if checkpoint:
   model, save_data, idx_to_classes = load_checkpoint(checkpoint, dropout=dropout_percent)
   model_name = save_data['model_name']
   layer_name, n_inputs = get_model_info(model_name)
-
 else:
   layers_output_n = len(class_to_idx)
   model_name = arguments.arch

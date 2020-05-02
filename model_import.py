@@ -3,7 +3,6 @@ from model_build import build_universal_model
 from convert_class_to_idx import convert_class_to_idx
 
 def load_universal_model(filename, map_location='cpu', dropout = 0):
-  # def build_universal_model(model_name, layers, layer_target_name = 'classifier', dropout=0.2):
     save_data = torch.load(filename, map_location=map_location)
     model, model_save_data = build_universal_model(
                                             save_data["model_name"],
