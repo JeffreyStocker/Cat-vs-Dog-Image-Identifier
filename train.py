@@ -85,27 +85,25 @@ elif device =='cuda' and not torch.cuda.is_available():
 images_path = arguments.images_path
 images_test_path = arguments.images_test_path
 
-imagesFolder = ImageFolder(images_path, transform=transforms.data_transforms)
+
 if not images_test_path:
+  print("Warning: No test dataset was supplied. The testing set will have the same transforms as the training dataset")
+  imagesFolder = ImageFolder(images_path, transform=transforms.data_transforms_train)
   n_images = len(imagesFolder)
   n_test_images  = n_images//10
   n_train_images = n_images - n_test_images
+
   train_images_folder, test_images_folder= torch.utils.data.random_split(imagesFolder, [n_train_images, n_test_images])
-
-  pass
+  class_to_idx = imagesFolder.class_to_idx
 else:
-  train_images_folder = imagesFolder
+  train_images_folder = ImageFolder (images_path, transform=transforms.data_transforms_train)
   test_images_folder = ImageFolder(images_test_path, transform=transforms.data_transforms)
-  pass
 
-train_images_folder = transforms.data_transforms(train_images_folder)
-test_images_folder = transforms.data_transforms_train(test_images_folder)
+  class_to_idx = train_images_folder.class_to_idx
 
 train_images_dataloader = DataLoader(train_images_folder, batch_size=32, shuffle=True)
 test_images_dataloader = DataLoader(test_images_folder, batch_size=32)
 
-class_to_idx = imagesFolder.class_to_idx
-layers_output_n = len(class_to_idx) #TODO
 
 checkpoint = arguments.checkpoint
 if checkpoint:
@@ -114,6 +112,7 @@ if checkpoint:
   layer_name, n_inputs = get_model_info(model_name)
 
 else:
+  layers_output_n = len(class_to_idx)
   model_name = arguments.arch
   layer_name, n_inputs = get_model_info(model_name)
 
@@ -125,10 +124,8 @@ else:
 
   model, save_data = build_model(model_name, layers, layer_name, dropout=dropout_percent, pretrained=True)
 
-
 if not save_data.get('idx_to_class'):
   save_data["idx_to_class"] = convert_class_to_idx(class_to_idx)
-
 
 #train model
 timer = Timer.Timer('Start Training')
