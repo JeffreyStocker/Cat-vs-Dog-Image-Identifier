@@ -43,7 +43,6 @@ def train(model, criterion, optimizer, training_data, test_data, save_data, epoc
             optimizer.step()
 
             running_loss += loss.item()
-            break
 
         test_loss, accuracy, test_losses = validate_model(model, test_data, criterion, test_losses, device=device)
 
