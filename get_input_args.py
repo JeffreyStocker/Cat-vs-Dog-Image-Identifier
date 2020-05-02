@@ -94,6 +94,7 @@ def get_input_args_for_training():
   parser.add_argument('--epochs', default=1)
 
   parser.add_argument('--images_path', type=str, default='flowers/train')
+  parser.add_argument('--images_test_path', type=str, default=None)
 
   return parser
 
