@@ -13,8 +13,7 @@ def load_universal_model(filename, map_location='cpu', dropout = None):
 
     model.load_state_dict(data["state_dict"])
 
-    class_to_idx = data.get("class_to_idx")
-    idx_to_class = convert_class_to_idx(class_to_idx)
+    idx_to_class = data.get("idx_to_class")
 
     print('Loaded: ', filename)
     return model, data, idx_to_class
