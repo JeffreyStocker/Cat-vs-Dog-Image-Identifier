@@ -89,7 +89,7 @@ n_train_images = n_images//10
 n_test_images = n_images - n_train_images
 
 train_images_folder, test_images_folder= torch.utils.data.random_split(imagesFolder, [n_train_images, n_test_images])
-train_images_dataloader = DataLoader(train_images_folder, batch_size=32)
+train_images_dataloader = DataLoader(train_images_folder, batch_size=32, shuffle=True)
 test_images_dataloader = DataLoader(test_images_folder, batch_size=32)
 
 class_to_idx = imagesFolder.class_to_idx
