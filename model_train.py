@@ -3,9 +3,9 @@ from model_validate import validate_model
 
 def train(model, criterion, optimizer, training_data, test_data, save_data, epochs = 1, learning_rate = .003, should_save_checkpoint = True, device='cpu'):
 
-    def save_function(current_epoch, extra_text = '', include_epoch_in_title = False):
+    def save_function(current_epoch):
         if save_data:
-            return save_universal_model(model, save_data, epochs = current_epoch, include_epoch_in_title=include_epoch_in_title)
+            return save_universal_model(model, save_data, epochs=current_epoch)
         else:
             return lambda x: x
 
@@ -23,8 +23,12 @@ def train(model, criterion, optimizer, training_data, test_data, save_data, epoc
 
     train_losses, test_losses = [], []
 
+    if initial_epoch > 0:
+        print('Resuming Training Starting at epoch: ' + str(initial_epoch + 1))
+
     print('***** Start Training *****')
     for epoch in range(initial_epoch, epochs):
+        print (f'Epoch: {epoch + 1}/{epochs}: IN PROGRESS...', end="\r")
         running_loss = 0
 
         for images, labels in training_data:
@@ -50,16 +54,13 @@ def train(model, criterion, optimizer, training_data, test_data, save_data, epoc
         test_losses.append(test_loss/len(test_data))
 
         if should_save_checkpoint:
-            save_function(epoch, extra_text="Mid")
+            save_function(epoch + 1)
 
         print('----------------------------------------')
-        print(f'E.: {epoch + 1}/{epochs} | '
+        print(f'Epoch: {epoch + 1}/{epochs} | '
                 f'Training Loss: {train_losses[-1]:.4f} | '
                 f'Test Loss: {test_losses[-1]:.4f} | '
-                f'Test Accuracy: {accuracy:.2f} | '
+                f'Test Accuracy: {accuracy:.2f}% | '
                 )
-
-    if should_save_checkpoint:
-        save_function(epoch, include_epoch_in_title=True)
 
     print('***** Done Training *****')
