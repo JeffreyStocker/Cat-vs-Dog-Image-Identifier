@@ -70,7 +70,6 @@ dropout_percent = float(arguments.dropout)
 learning_rate = float(arguments.learning_rate)
 
 epochs = int(arguments.epochs)
-images_path = arguments.images_path
 
 
 #check if device is available
@@ -83,12 +82,25 @@ elif device =='cuda' and not torch.cuda.is_available():
   raise 'There is no CUDA on this computer'
 
 #load images
-imagesFolder = ImageFolder(images_path, transform=transforms.data_transforms)
-n_images = len(imagesFolder)
-n_train_images = n_images//10
-n_test_images = n_images - n_train_images
+images_path = arguments.images_path
+images_test_path = arguments.images_test_path
 
-train_images_folder, test_images_folder= torch.utils.data.random_split(imagesFolder, [n_train_images, n_test_images])
+imagesFolder = ImageFolder(images_path, transform=transforms.data_transforms)
+if not images_test_path:
+  n_images = len(imagesFolder)
+  n_train_images = n_images//10
+  n_test_images = n_images - n_train_images
+  train_images_folder, test_images_folder= torch.utils.data.random_split(imagesFolder, [n_train_images, n_test_images])
+
+  pass
+else:
+  train_images_folder = imagesFolder
+  test_images_folder = ImageFolder(images_test_path, transform=transforms.data_transforms)
+  pass
+
+train_images_folder = transforms.data_transforms(train_images_folder)
+test_images_folder = transforms.data_transforms_train(test_images_folder)
+
 train_images_dataloader = DataLoader(train_images_folder, batch_size=32, shuffle=True)
 test_images_dataloader = DataLoader(test_images_folder, batch_size=32)
 

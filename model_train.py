@@ -18,21 +18,20 @@ def train(model, criterion, optimizer, training_data, test_data, save_data, epoc
     model.to(device)
     model.train()
 
-    steps = 0
-    steps_to_evaluate = 10
-
     train_losses, test_losses = [], []
 
     if initial_epoch > 0:
-        print('Resuming Training Starting at epoch: ' + str(initial_epoch + 1))
+        print(f'Resuming Training Starting at epoch: {str(initial_epoch + 1)}, Running for {epochs - initial_epoch} epochs')
 
     print('***** Start Training *****')
     for epoch in range(initial_epoch, epochs):
-        print (f'Epoch: {epoch + 1}/{epochs}: IN PROGRESS...', end="\r")
         running_loss = 0
-
+        steps = 0
+        total_steps = len(training_data)
         for images, labels in training_data:
             steps += 1
+            print (f'Epoch: {epoch + 1}/{epochs}: Step {steps}/{total_steps} IN PROGRESS...', end="\r")
+
             optimizer.zero_grad()
 
             images, labels = images.to(device), labels.to(device)
@@ -45,8 +44,6 @@ def train(model, criterion, optimizer, training_data, test_data, save_data, epoc
 
             running_loss += loss.item()
             break
-            if steps % steps_to_evaluate == 0:
-                pass
 
         test_loss, accuracy, test_losses = validate_model(model, test_data, criterion, test_losses, device=device)
 
