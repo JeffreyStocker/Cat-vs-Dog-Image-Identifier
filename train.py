@@ -28,6 +28,7 @@ from pathlib import Path
 ImageFolder = datasets.ImageFolder
 
 arguments = get_input_args().parse_args()
+print(arguments)
 
 model_output_name_and_input_count = {
     "alexnet": ('classifier', 9216),
@@ -82,23 +83,12 @@ elif device =='cuda' and not torch.cuda.is_available():
   raise 'There is no CUDA on this computer'
 
 #load images
-images_path = arguments.images_path
-images_test_path = arguments.images_test_path
 
-if not images_test_path:
-  print("Warning: No test dataset was supplied. The testing set will have the same transforms as the training dataset")
-  imagesFolder = ImageFolder(images_path, transform=transforms.data_transforms_train)
-  n_images = len(imagesFolder)
-  n_test_images  = n_images//10
-  n_train_images = n_images - n_test_images
+data_dir = arguments.data_dir
 
-  train_images_folder, test_images_folder= torch.utils.data.random_split(imagesFolder, [n_train_images, n_test_images])
-  class_to_idx = imagesFolder.class_to_idx
-else:
-  train_images_folder = ImageFolder (images_path, transform=transforms.data_transforms_train)
-  test_images_folder = ImageFolder(images_test_path, transform=transforms.data_transforms)
-
-  class_to_idx = train_images_folder.class_to_idx
+train_images_folder = ImageFolder (data_dir + 'train', transform=transforms.data_transforms_train)
+test_images_folder = ImageFolder(data_dir + 'test', transform=transforms.data_transforms)
+class_to_idx = train_images_folder.class_to_idx
 
 train_images_dataloader = DataLoader(train_images_folder, batch_size=32, shuffle=True)
 test_images_dataloader = DataLoader(test_images_folder, batch_size=32)

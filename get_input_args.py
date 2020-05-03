@@ -82,8 +82,10 @@ def get_input_args_for_training():
 
   # Replace None with parser.parse_args() parsed argument collection that
   # you created with this function
+
   parser = argparse.ArgumentParser(description='Help')
 
+  parser.add_argument('data_dir', type=str, required=True)
   parser.add_argument('--arch', default='resnet101', type=str)
   parser.add_argument('--device', default='cpu', type=str, choices=['cpu', 'cuda'])
   parser.add_argument('--checkpoint', default=None)
@@ -92,9 +94,6 @@ def get_input_args_for_training():
   parser.add_argument('--dropout', default=0.02)
   parser.add_argument('--n_hidden_layers', type=str, default='1, 2, 3')
   parser.add_argument('--epochs', default=1)
-
-  parser.add_argument('--images_path', type=str, default='flowers/train')
-  parser.add_argument('--images_test_path', type=str, default=None)
 
   return parser
 
