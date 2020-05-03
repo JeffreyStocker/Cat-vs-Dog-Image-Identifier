@@ -85,14 +85,14 @@ def get_input_args_for_training():
 
   parser = argparse.ArgumentParser(description='Help')
 
-  parser.add_argument('data_dir', type=str, required=True)
+  parser.add_argument('data_dir', type=str)
   parser.add_argument('--arch', default='resnet101', type=str)
   parser.add_argument('--device', default='cpu', type=str, choices=['cpu', 'cuda'])
   parser.add_argument('--checkpoint', default=None)
 
   parser.add_argument('--learning_rate', default=0.003, help="Should be a string with each layer sharing before and after, IE 3 layers would have '5, 3, 2, 6'") #
   parser.add_argument('--dropout', default=0.02)
-  parser.add_argument('--n_hidden_layers', type=str, default='1, 2, 3')
+  parser.add_argument('--hidden_units', type=str, default='512')
   parser.add_argument('--epochs', default=1)
 
   return parser

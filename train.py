@@ -104,7 +104,7 @@ else:
   model_name = arguments.arch
   layer_name, n_inputs = get_model_info(model_name)
 
-  n_hidden_layers = arguments.n_hidden_layers
+  n_hidden_layers = arguments.hidden_units
 
   layers = [int(n_inputs)]
   layers.extend([int(layer.strip()) for layer in n_hidden_layers.split(',')])
