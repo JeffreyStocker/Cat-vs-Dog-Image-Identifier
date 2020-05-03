@@ -124,11 +124,11 @@ def get_input_args_for_predict():
   # you created with this function
   parser = argparse.ArgumentParser(description='Help')
 
-  parser.add_argument('--gpu', action='store_true')
-  parser.add_argument('--checkpoint')
+  parser.add_argument('image_path', type=str)
+  parser.add_argument('checkpoint')
 
-  parser.add_argument('--image_path', type=str)
-  parser.add_argument('--class_values', default=None)
+  parser.add_argument('--gpu', action='store_true')
+  parser.add_argument('--category_names', default=None)
   parser.add_argument('--topk', default=1, type=int)
 
   return parser

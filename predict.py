@@ -28,7 +28,7 @@ arguments = get_input_args_for_predict().parse_args()
 
 checkpoint = arguments.checkpoint
 image_path = arguments.image_path
-class_values = arguments.class_values
+class_values = arguments.category_names
 topk = arguments.topk
 
 #check if device is available
