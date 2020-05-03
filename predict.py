@@ -33,10 +33,7 @@ topk = arguments.topk
 
 #check if device is available
 device = 'cuda' if arguments.gpu else 'cpu'
-
-if device != 'cuda' and device != 'cpu':
-  raise 'device argument must be either "cpu" or "cuda"'
-elif device =='cuda' and not is_cuda_available():
+if device =='cuda' and not is_cuda_available():
   raise 'There is no CUDA on this computer'
 
 if class_values:

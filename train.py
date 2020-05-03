@@ -77,9 +77,7 @@ epochs = int(arguments.epochs)
 device = 'cuda' if arguments.gpu else 'cpu'
 is_cuda_available = torch.cuda.is_available
 
-if device != 'cuda' and device != 'cpu':
-  raise 'device argument must be either "cpu" or "cuda"'
-elif device =='cuda' and not torch.cuda.is_available():
+if device =='cuda' and not torch.cuda.is_available():
   raise 'There is no CUDA on this computer'
 
 #load images
