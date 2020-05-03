@@ -32,7 +32,8 @@ class_values = arguments.class_values
 topk = arguments.topk
 
 #check if device is available
-device = arguments.device
+device = 'cuda' if arguments.gpu else 'cpu'
+
 if device != 'cuda' and device != 'cpu':
   raise 'device argument must be either "cpu" or "cuda"'
 elif device =='cuda' and not is_cuda_available():
