@@ -74,7 +74,7 @@ epochs = int(arguments.epochs)
 
 
 #check if device is available
-device = arguments.device
+device = 'cuda' if arguments.device else 'cpu'
 is_cuda_available = torch.cuda.is_available
 
 if device != 'cuda' and device != 'cpu':

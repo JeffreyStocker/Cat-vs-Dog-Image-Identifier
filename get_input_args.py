@@ -87,7 +87,7 @@ def get_input_args_for_training():
 
   parser.add_argument('data_dir', type=str)
   parser.add_argument('--arch', default='resnet101', type=str)
-  parser.add_argument('--device', default='cpu', type=str, choices=['cpu', 'cuda'])
+  parser.add_argument('--device', action='store_true',)
   parser.add_argument('--checkpoint', default=None)
 
   parser.add_argument('--learning_rate', default=0.003, help="Should be a string with each layer sharing before and after, IE 3 layers would have '5, 3, 2, 6'") #
