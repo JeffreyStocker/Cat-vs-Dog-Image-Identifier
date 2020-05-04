@@ -56,7 +56,6 @@ with torch.no_grad():
 
 prob_topk = torch.exp(log_prob).topk(topk)
 
-# print(prob_topk.items())
 output = []
 
 for prob, idx in zip(prob_topk[0][0].numpy(), prob_topk[1][0].numpy()):
