@@ -5,6 +5,7 @@ import Timer
 from model_import import load_universal_model as load_checkpoint
 from model_build import build_universal_model as build_model
 from model_train import train as train_model
+import model_save
 from torch.utils.data import DataLoader
 from torchvision import datasets
 from convert_class_to_idx import convert_class_to_idx
@@ -80,8 +81,10 @@ is_cuda_available = torch.cuda.is_available
 if device =='cuda' and not torch.cuda.is_available():
   raise 'There is no CUDA on this computer'
 
-#load images
+save_dir = arguments.save_dir
+model_save.set_path(save_dir)
 
+#load images
 data_dir = arguments.data_dir
 
 train_images_folder = ImageFolder (data_dir + 'train', transform=transforms.data_transforms_train)

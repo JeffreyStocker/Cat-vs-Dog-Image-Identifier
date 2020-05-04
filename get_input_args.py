@@ -94,6 +94,7 @@ def get_input_args_for_training():
   parser.add_argument('--dropout', default=0.02)
   parser.add_argument('--hidden_units', type=str, default='512')
   parser.add_argument('--epochs', default=1)
+  parser.add_argument('--save_dir', default='/')
 
   return parser
 
