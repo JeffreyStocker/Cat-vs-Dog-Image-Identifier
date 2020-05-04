@@ -1,7 +1,7 @@
 from model_save import save_universal_model
 from model_validate import validate_model
 
-def train(model, criterion, optimizer, training_data, test_data, save_data, epochs = 1, learning_rate = .003, should_save_checkpoint = True, device='cpu'):
+def train(model, criterion, optimizer, training_data, test_data, save_data, epochs = 1, should_save_checkpoint = True, device='cpu'):
 
     def save_function(current_epoch):
         if save_data:
