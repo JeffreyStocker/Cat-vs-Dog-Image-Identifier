@@ -5,6 +5,42 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "predict",
+      "type": "python",
+      "request": "launch",
+      // "program": "${workspaceFolder}\\predict.py --checkpoint checkpoint/densenet121_checkpoints_2020-04-30 10-44-07.027571-e173.pth --image_path flowers/test/2/image_05100.jpg",
+      "program": "${workspaceFolder}\\predict.py ",
+      "args": [
+        "--checkpoint", "checkpoint/New folder/densenet121_checkpoints_2020-04-30 10-44-07.027571-e173.pth",
+        "--image_path", "flowers/test/2/image_05100.jpg",
+        "--class_values", "cat_to_name.json",
+        // "--device", "cpu",
+        "--topk", "5"
+      ],
+      "console": "integratedTerminal"
+      // "console": "externalTerminal"
+    },
+    {
+      "name": "train",
+      "type": "python",
+      "request": "launch",
+      // "program": "${workspaceFolder}\\predict.py --checkpoint checkpoint/densenet121_checkpoints_2020-04-30 10-44-07.027571-e173.pth --image_path flowers/test/2/image_05100.jpg",
+      "program": "${workspaceFolder}\\train.py ",
+      "args": [
+        "flowers/",
+        "--arch", "mobilenet_v2",
+        // "--gpu",
+        // "--checkpoint", "checkpoint/mobilenet_v2_checkpoints_2020-05-01_22-59-54.824761.pth",
+        "--learning_rate", ".003",
+        // "--dropout", ".02",
+        "--hidden_units", "512",
+        "--epochs", "2",
+        "--save_dir", "checkpoint",
+      ],
+      "console": "integratedTerminal"
+      // "console": "externalTerminal"
+    },
+    {
       "name": "Python: Current File",
       "type": "python",
       "request": "launch",
